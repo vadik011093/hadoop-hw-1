@@ -1,0 +1,16 @@
+group 'ru.edu.mipt'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.apache.hadoop:hadoop-common:2.7.2'
+    compile 'org.apache.hadoop:hadoop-client:2.7.2'
+    compile 'org.apache.hadoop:hadoop-test:1.2.1'
+}
