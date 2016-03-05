@@ -68,7 +68,7 @@ public class UUIDRandomise {
 
         @Override
         public void reduce(IntWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            List<String> list = new ArrayList<>();
+            List<String> list = new ArrayList<String>();
 
             Iterator<Text> iterator = values.iterator();
 

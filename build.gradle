@@ -1,9 +1,10 @@
 group 'ru.edu.mipt'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 apply plugin: 'java'
+apply plugin: 'idea'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.6
 
 repositories {
     mavenCentral()
@@ -11,6 +12,15 @@ repositories {
 
 dependencies {
     compile 'org.apache.hadoop:hadoop-common:2.7.2'
-    compile 'org.apache.hadoop:hadoop-client:2.7.2'
+    compile 'org.apache.hadoop:hadoop-client:1.2.1'
     compile 'org.apache.hadoop:hadoop-test:1.2.1'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.edu.mipt.UUIDRandomise'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
