@@ -1,0 +1,11 @@
+Идентификаторы перемешиваются в случайном порядке.
+В одной строке записывается через запятую случайное число идентификаторов - от 1 до 5.
+
+build
+./gradlew clean build
+
+local run
+java -jar build/libs/hadoop-hw-1-1.0.jar <input> <output>
+
+run on hdfs
+hadoop jar build/libs/hadoop-hw-1-1.0.jar <input> <output>
