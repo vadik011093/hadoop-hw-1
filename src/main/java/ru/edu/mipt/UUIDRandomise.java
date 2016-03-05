@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.random;
 import static org.apache.commons.lang.StringUtils.join;
 
 public class UUIDRandomise {
@@ -32,7 +31,7 @@ public class UUIDRandomise {
         job.setReducerClass(UUIDReducer.class);
         job.setOutputKeyClass(IntWritable.class);
         job.setOutputValueClass(Text.class);
-        job.setNumReduceTasks(1);
+        job.setNumReduceTasks(8);
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
@@ -42,21 +41,17 @@ public class UUIDRandomise {
 
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            for (String str : value.toString().split("\\s")) {
-                int random = (int) (random() * Integer.MAX_VALUE);
-                context.write(new IntWritable(random), new Text(str));
-            }
+            context.write(new IntWritable(new Random().nextInt()), value);
         }
     }
 
     public static class UUIDCombiner extends Reducer<IntWritable, Text, IntWritable, Text> {
 
-        private static final IntWritable KEY = new IntWritable(0);
-
         @Override
         public void reduce(IntWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            int basket = new Random().nextInt(context.getNumReduceTasks()) + 1;
             for (Text value : values)
-                context.write(KEY, value);
+                context.write(new IntWritable(basket), value);
         }
 
     }
@@ -68,14 +63,17 @@ public class UUIDRandomise {
 
         @Override
         public void reduce(IntWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-            List<String> list = new ArrayList<>();
-
             Iterator<Text> iterator = values.iterator();
-
-            for (int i = 0; i < new Random().nextInt(MAX - MIN) + MIN; i++)
-                list.add(iterator.next().toString());
-
-            context.write(new Text(join(list, ",")), NullWritable.get());
+            while (iterator.hasNext()) {
+                List<String> list = new ArrayList<>();
+                int random = new Random().nextInt(MAX - MIN) + MIN;
+                int i = 0;
+                while (i < random && iterator.hasNext()) {
+                    list.add(iterator.next().toString());
+                    i++;
+                }
+                context.write(new Text(join(list, ",")), NullWritable.get());
+            }
         }
     }
 }
