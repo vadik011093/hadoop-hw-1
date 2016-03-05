@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     compile 'org.apache.hadoop:hadoop-common:2.7.2'
-    compile 'org.apache.hadoop:hadoop-client:1.2.1'
+    compile 'org.apache.hadoop:hadoop-client:2.7.2'
     compile 'org.apache.hadoop:hadoop-test:1.2.1'
 }
 

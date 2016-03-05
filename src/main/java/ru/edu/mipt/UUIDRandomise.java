@@ -18,9 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.random;
-import static java.lang.String.join;
-
 public class UUIDRandomise {
 
     public static void main(String[] args) throws Exception {
@@ -43,7 +40,7 @@ public class UUIDRandomise {
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             for (String str : value.toString().split("\\s")) {
-                int random = (int) (random() * Integer.MAX_VALUE);
+                int random = (int) (Math.random() * Integer.MAX_VALUE);
                 context.write(new IntWritable(random), new Text(str));
             }
         }
@@ -75,7 +72,7 @@ public class UUIDRandomise {
             for (int i = 0; i < new Random().nextInt(MAX - MIN) + MIN; i++)
                 list.add(iterator.next().toString());
 
-            context.write(new Text(join(",", list)), NullWritable.get());
+            context.write(new Text(String.join(",", list)), NullWritable.get());
         }
     }
 }
